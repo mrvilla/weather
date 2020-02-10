@@ -1,45 +1,48 @@
 <template>
-	<div class="header">
+	<header class="header">
 		<div class="header__content-desc">
-			<WeatherSun class="header__icon"/>
+			<WeatherIcon class="header__icon" :icon="icon"></WeatherIcon>
 			<div class="header__description-content">
 				<div class="description__content">
 					<div class="content__main">{{main}}</div>
-					<div class="content__temp-level">{{level}}</div>
+					<div class="content__temp-level">{{Math.floor(high)}}º/{{Math.floor(low)}}º</div>
 				</div>
-				<div class="overline__temp">{{temp}}</div>
+				<div class="overline__temp">{{Math.floor(temp)}}º</div>
 			</div>
 		</div>
 
 		<div class="header__overline">
 			<div class="overline__city">{{city}}</div>
-			<time class="overline__date" datetime="">{{date}}</time>
+			<time class="overline__date" datetime="">{{todayDate()}}</time>
 		</div>
-	</div>
+	</header>
 </template>
 
 <script>
-    import WeatherSun from "./icons/WeatherSun";
-    import { mapState } from 'vuex'
+    import WeatherIcon from "./WeatherIcon";
 
     export default {
         name: 'Header',
-        props: {
-            main: String,
-            level: String,
-            temp: String,
-            city: String,
-            date: String,
-        },
+        props: [
+            'main',
+            'high',
+            'low',
+            'temp',
+            'city',
+            'date',
+            'icon'
+        ],
         components: {
-            WeatherSun
+            WeatherIcon
         },
-        mounted: function () {
-            this.$store.dispatch('loadList')
-        },
-        computed: mapState([
-            'list'
-        ])
+        methods: {
+            todayDate(today) {
+                today = new Date();
+                const week = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                return week[today.getDay()] + ', ' + today.getDate() + ' ' + months[today.getMonth()];
+            }
+        }
     }
 </script>
 
